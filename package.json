@@ -44,6 +44,10 @@
     "validator": "^10.8.0"
   },
   "devDependencies": {
+    "@babel/preset-stage-0": "^7.0.0",
+    "babel-eslint": "^10.0.2",
+    "eslint": "^6.2.0",
+    "eslint-plugin-react": "^7.14.3",
     "nodemon": "^1.18.4"
   }
 }

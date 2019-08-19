@@ -1,5 +1,10 @@
 {
     "cSpell.words": [
-        "const"
-    ]
+        "const",
+        "mimetype",
+        "signin",
+        "signout",
+        "unfollow"
+    ],
+    "eslint.autoFixOnSave": true
 }
