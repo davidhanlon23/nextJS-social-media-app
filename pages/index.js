@@ -1,11 +1,13 @@
-/* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable linebreak-style */
+/* eslint-disable no-mixed-spaces-and-tabs */
+
 // import CircularProgress from "@material-ui/core/CircularProgress";
 // import Drawer from "@material-ui/core/Drawer";
 // import Typography from "@material-ui/core/Typography";
 // import Grid from "@material-ui/core/Grid";
 // import Button from "@material-ui/core/Button";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { authInitialProps } from "../lib/auth";
 
 // eslint-disable-next-line no-undef
 class Index extends React.Component {
@@ -55,4 +57,6 @@ const styles = theme => ( {
   
 } );
 
+
+Index.getInitialProps = authInitialProps();
 export default withStyles( styles )( Index );

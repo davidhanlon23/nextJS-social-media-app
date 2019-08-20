@@ -18,13 +18,142 @@ import Slide from "@material-ui/core/Slide";
 import Gavel from "@material-ui/icons/Gavel";
 import VerifiedUserTwoTone from "@material-ui/icons/VerifiedUserTwoTone";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { Divider } from "@material-ui/core";
+import { signupUser } from "../lib/auth";
+import Link from "next/link";
+
+function Transition( props ){
+	return <Slide direction="up" {...props} />;
+}
 
 // eslint-disable-next-line no-undef
 class Signup extends React.Component {
-  state = {};
+  state = {
+  	name:"",
+  	email:"",
+  	password:"",
+  	error:"",
+  	openError:false,
+  	createdUser:"",
+  	openSuccess:false,
+  	isLoading: false
+  };
+  handleClose = ()=> {this.setState( { openError:false } );};
 
+  handleChange =event=>{
+  	this.setState( { [event.target.name]: event.target.value } );
+  };
+  handleSubmit = event =>{
+  	const { name, email, password }=this.state;
+  	event.preventDefault();
+  	const user = {
+  		name,
+  		email,
+  		password
+  	};
+  	this.setState( { isLoading:true, error:"" } );
+  	signupUser( user ).then( createdUser =>{
+  		this.setState( { 
+  			createdUser,
+  			error:"",
+  			openSuccess:true,
+  			isLoading:false
+  		} );
+  	} ).catch( this.showError );
+
+  };
+
+  showError= err =>{
+  	const error = err.response && err.response.data || err.message;
+  	this.setState( { error, openError:true, isLoading:false } );
+
+  }
   render() {
-  	return <div>Signup</div>;
+  	const { classes } = this.props;
+  	const{ error, openError, openSuccess, createdUser, isLoading } = this.state;
+  	return (
+  		<div className={classes.root}>
+  			<Paper className={classes.paper}>
+  				<Avatar className={classes.avatar}>
+  					<Gavel/>
+  				</Avatar>
+
+  				<Typography variant="h5" component="h1">
+              Sign Up
+  				</Typography>
+
+  				<form onSubmit={this.handleSubmit}className ={classes.form} action="">
+  					<FormControl margin="normal" required fullWidth>
+  						<InputLabel>Name</InputLabel>
+  						<Input
+  							name="name"
+  							type="text"
+  							onChange={this.handleChange}
+  						/>
+  					</FormControl>
+  					<FormControl margin="normal" required fullWidth>
+  						<InputLabel>Email</InputLabel>
+  						<Input
+  							name="email"
+  							type="email"
+  							onChange={this.handleChange}
+  						/>
+  					</FormControl>
+  					<FormControl margin="normal" required fullWidth>
+  						<InputLabel>Password</InputLabel>
+  						<Input
+  							name="password"
+  							type="password"
+  							onChange={this.handleChange}
+  						/>
+  					</FormControl>
+
+  					<Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit} disabled={isLoading}> {isLoading ? "Signing up...":"Sign Up"}</Button>
+            
+  				</form>
+
+  				{/*Error Snackbar */}
+          
+  			{ error &&	<Snackbar 
+  					anchorOrigin={{
+  						vertical: "bottom",
+  						horizontal:"right"
+  					}}
+  					open={openError}
+  					onClose={this.handleClose}
+  					autoHideDuration={6000}
+  					message ={<span className={classes.snack}>{error}</span>}
+  				/>}
+  			</Paper>
+
+  			{/*Success Dialog */}
+  			<Dialog
+  				open={openSuccess}
+  				disableBackdropClick={true}
+  				TransitionComponent={Transition}
+  			>
+  				<DialogTitle>
+  					<VerifiedUserTwoTone className={classes.icon}/>
+             New Account
+  				</DialogTitle>
+  			
+        	<DialogContent>
+  					<DialogContentText>
+            User {createdUser} successfully created!
+  					</DialogContentText>
+  				</DialogContent>
+
+  				<DialogActions>
+  					<Button color="primary" variant="contained">
+  						<Link href='signin'>
+  							<a className={classes.signinLink}>Sign In</a>
+  						</Link>
+  					</Button>
+  				</DialogActions>
+  			</Dialog>
+  		</div>
+    
+  	);
   }
 }
 
