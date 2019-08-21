@@ -1,32 +1,136 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable no-mixed-spaces-and-tabs */
-// import Avatar from "@material-ui/core/Avatar";
-// import FormControl from "@material-ui/core/FormControl";
-// import Paper from "@material-ui/core/Paper";
-// import Input from "@material-ui/core/Input";
-// import InputLabel from "@material-ui/core/InputLabel";
-// import Snackbar from "@material-ui/core/Snackbar";
-// import Dialog from "@material-ui/core/Dialog";
-// import DialogActions from "@material-ui/core/DialogActions";
-// import DialogContent from "@material-ui/core/DialogContent";
-// import DialogContentText from "@material-ui/core/DialogContentText";
-// import DialogTitle from "@material-ui/core/DialogTitle";
-// import VerifiedUserTwoTone from "@material-ui/icons/VerifiedUserTwoTone";
-// import Typography from "@material-ui/core/Typography";
-// import Button from "@material-ui/core/Button";
-// import CloudUpload from "@material-ui/icons/CloudUpload";
-// import FaceTwoTone from "@material-ui/icons/FaceTwoTone";
-// import EditSharp from "@material-ui/icons/EditSharp";
+/* eslint-disable no-unused-vars */
+import Avatar from "@material-ui/core/Avatar";
+import FormControl from "@material-ui/core/FormControl";
+import Paper from "@material-ui/core/Paper";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import Snackbar from "@material-ui/core/Snackbar";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import VerifiedUserTwoTone from "@material-ui/icons/VerifiedUserTwoTone";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import CloudUpload from "@material-ui/icons/CloudUpload";
+import FaceTwoTone from "@material-ui/icons/FaceTwoTone";
+import EditSharp from "@material-ui/icons/EditSharp";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 import { authInitialProps } from "../lib/auth";
+import { getAuthUser } from "../lib/api";
 
 // eslint-disable-next-line no-undef
 class EditProfile extends React.Component {
-  state = {};
+  state = {
+	  _id:"",
+	  name:"",
+	  email:"",
+	  about:"",
+	  avatar:"",
+	  isLoading:true
+  };
 
+  componentDidMount(){
+  	const { auth } = this.props;  
+	  getAuthUser( auth.user._id )
+	  .then( user=>{
+  			this.setState( {
+  				...user,
+  				isLoading:false
+  			} );
+  		} ).catch( err=>{
+  			console.error( err );
+  			this.setState( { isLoading:false } );
+  		} );
+  }
   render() {
-  	return <div>EditProfile</div>;
+	  const { classes } = this.props;
+	  const { name, email, avatar, about , isLoading } =this.state;
+  	return (
+		  <div className={classes.root}>
+  			<Paper className={classes.paper}>
+				  <Avatar className={classes.avatar}>
+					  <EditSharp/>
+				  </Avatar>
+				  <Typography variant ="h5" component="h1">
+					Edit Profile
+				  </Typography>
+
+
+				  {/* Edit profile form */}
+				  <form className={classes.form}>
+  					{isLoading ? (
+  						<Avatar className={classes.bigAvatar}>
+  							<FaceTwoTone/>
+  						</Avatar>
+  					):(
+  						<Avatar src = {avatar} className={classes.bigAvatar}/>
+  					)}
+  					<input 
+  						type ="file"
+  						name="avatar"
+  						id="avatar"
+  						accept="image/*"
+  						onChange={this.handleChange}
+  						className={classes.input}
+  					/>
+  					<label htmlFor="avatar" className={classes.uploadButton}>
+  						<Button variant="contained" color="secondary" component="span">
+							Upload Image <CloudUpload/>
+  						</Button>
+  					</label>
+  					<span className={classes.filename}>
+  						{avatar && avatar.name}
+  					</span>
+
+  					<FormControl margin="normal" required fullWidth>
+  						<InputLabel htmlFor="name">Name</InputLabel>
+  						<Input
+  							type="text"
+  							name="name"
+  							value={name}
+  							onChange={this.handleChange}
+  						/>
+  					</FormControl>
+
+					  <FormControl margin="normal"  fullWidth>
+  						<InputLabel htmlFor="about">About</InputLabel>
+  						<Input
+  							type="text"
+  							name="about"
+  							value={about}
+  							onChange={this.handleChange}
+  						/>
+  					</FormControl>
+
+					  <FormControl margin="normal" required fullWidth>
+  						<InputLabel htmlFor="email">Email</InputLabel>
+  						<Input
+  							type="email"
+  							name="email"
+  							value={email}
+  							onChange={this.handleChange}
+  						/>
+  					</FormControl> 
+
+					  <Button
+						  type="submit"
+						  fullWidth
+						  disabled={isLoading}
+						  variant="contained"
+						  color="primary"
+						  className={classes.submit}
+					  >
+						  Save
+					  </Button>
+				  </form>
+			  </Paper>
+		  </div>
+	  );
   }
 }
 

@@ -56,7 +56,7 @@ router
 router.get( "/api/users", userController.getUsers );
 router.get(
 	"/api/users/profile/:userId",
-	 userController.getUserProfile
+	userController.getUserProfile
 );
 router.get(
 	"/api/users/feed/:userId",

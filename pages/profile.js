@@ -18,6 +18,7 @@ import Link from "next/link";
 import { authInitialProps } from "../lib/auth";
 import { getUser } from "../lib/api";
 import FollowUser from "../components/profile/FollowUser";
+import DeleteUser from "../components/profile/DeleteUser";
 
 // eslint-disable-next-line no-undef
 class Profile extends React.Component {
@@ -100,6 +101,7 @@ class Profile extends React.Component {
   										</IconButton>
   									</a>
   								</Link>
+  								<DeleteUser user={user}  />
   							</ListItemSecondaryAction>
   						):(
   							<FollowUser isFollowing={isFollowing} toggleFollow={this.toggleFollow} />
