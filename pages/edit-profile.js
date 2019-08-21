@@ -19,9 +19,10 @@ import CloudUpload from "@material-ui/icons/CloudUpload";
 import FaceTwoTone from "@material-ui/icons/FaceTwoTone";
 import EditSharp from "@material-ui/icons/EditSharp";
 import withStyles from "@material-ui/core/styles/withStyles";
-
+import Router from "next/router";
 import { authInitialProps } from "../lib/auth";
-import { getAuthUser } from "../lib/api";
+import { getAuthUser,updateUser } from "../lib/api";
+
 
 // eslint-disable-next-line no-undef
 class EditProfile extends React.Component {
@@ -31,11 +32,19 @@ class EditProfile extends React.Component {
 	  email:"",
 	  about:"",
 	  avatar:"",
-	  isLoading:true
+	  isLoading:true,
+	  avatarPreview:"",
+	  openSuccess:false,
+	  openError:false,
+	  error:"",
+	  updatedUser:null,
+	  isSaving:false
   };
 
   componentDidMount(){
-  	const { auth } = this.props;  
+	  const { auth } = this.props;  
+	  // eslint-disable-next-line no-undef
+	  this.userData = new FormData();
 	  getAuthUser( auth.user._id )
 	  .then( user=>{
   			this.setState( {
@@ -47,9 +56,42 @@ class EditProfile extends React.Component {
   			this.setState( { isLoading:false } );
   		} );
   }
+
+  handleChange = event =>{
+  	let inputValue;
+  	if( event.target.name ==="avatar" ){
+  		inputValue = event.target.files[0];
+  		this.setState( { avatarPreview: this.createPreviewImage( inputValue ) } );
+	  }
+	  else{
+		  inputValue= event.target.value;
+
+	  }
+	  this.userData.set( event.target.name, inputValue );
+	  this.setState( { [event.target.name]: inputValue } );
+
+  }
+  handleSubmit = event =>{
+	  event.preventDefault();
+	  this.setState( { isSaving:true } );
+	  updateUser( this.state._id, this.userData )
+	  .then( updatedUser =>{
+			  this.setState( { updatedUser, openSuccess:true } );
+			  setTimeout( () => Router.push( `/profile/${this.state._id}` ), 6000 );
+  			console.log( updatedUser );
+	  } ).catch( this.showError );
+  }
+
+  createPreviewImage = file => URL.createObjectURL( file );
+  handleClose = ()=> {this.setState( { openError:false } );};
+  showError= err =>{
+  	const error = err.response && err.response.data || err.message;
+  	this.setState( { error, openError:true, isSaving:false } );
+
+  } 
   render() {
 	  const { classes } = this.props;
-	  const { name, email, avatar, about , isLoading } =this.state;
+	  const { name, email, avatar, about , isLoading, avatarPreview, error, openError, isSaving,updatedUser, openSuccess } =this.state;
   	return (
 		  <div className={classes.root}>
   			<Paper className={classes.paper}>
@@ -62,13 +104,13 @@ class EditProfile extends React.Component {
 
 
 				  {/* Edit profile form */}
-				  <form className={classes.form}>
+				  <form onSubmit={this.handleSubmit} className={classes.form}>
   					{isLoading ? (
   						<Avatar className={classes.bigAvatar}>
   							<FaceTwoTone/>
   						</Avatar>
   					):(
-  						<Avatar src = {avatar} className={classes.bigAvatar}/>
+  						<Avatar src = {avatarPreview || avatar} className={classes.bigAvatar}/>
   					)}
   					<input 
   						type ="file"
@@ -120,15 +162,47 @@ class EditProfile extends React.Component {
 					  <Button
 						  type="submit"
 						  fullWidth
-						  disabled={isLoading}
+						  disabled={isSaving||isLoading}
 						  variant="contained"
 						  color="primary"
 						  className={classes.submit}
 					  >
-						  Save
+						  {isSaving ? "Saving...":"Save"}
 					  </Button>
 				  </form>
 			  </Paper>
+			  	{/*Error Snackbar */}
+          
+				  { error &&	<Snackbar 
+  					anchorOrigin={{
+  						vertical: "bottom",
+  						horizontal:"right"
+  					}}
+  					open={openError}
+  					onClose={this.handleClose}
+  					autoHideDuration={6000}
+  					message ={<span className={classes.snack}>{error}</span>}
+  				/>}
+  		
+
+  			{/*Success Dialog */}
+  			<Dialog
+  				open={openSuccess}
+  				disableBackdropClick={true}
+  			
+  			>
+  				<DialogTitle>
+  					<VerifiedUserTwoTone className={classes.icon}/>
+             Profile Updated
+  				</DialogTitle>
+  			
+        	<DialogContent>
+  					<DialogContentText>
+            User {updatedUser && updatedUser.name}, was successfully updated!
+  					</DialogContentText>
+  				</DialogContent>
+
+  			</Dialog>
 		  </div>
 	  );
   }
