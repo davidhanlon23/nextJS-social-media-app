@@ -4,6 +4,7 @@
         "mimetype",
         "signin",
         "signout",
+        "subheader",
         "unfollow"
     ],
     "eslint.autoFixOnSave": true,

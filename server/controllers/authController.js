@@ -14,7 +14,7 @@ exports.validateSignup = ( req, res, next ) => {
 	req.checkBody( "email", "Enter a valid email" ).isEmail().normalizeEmail();
 
 	req.checkBody( "password", "Enter a password" ).notEmpty();
-	req.checkBody( "password", "Password must be between 4 and 10 characters" ).isLength( { min: 4, max:10 } );
+	req.checkBody( "password", "Password must be between 4 and 20 characters" ).isLength( { min: 4, max:20 } );
 
 	const errors = req.validationErrors();
 	if( errors ){
