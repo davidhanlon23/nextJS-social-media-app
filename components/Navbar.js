@@ -25,7 +25,10 @@ const Navbar = ( { classes, router, pageProps: { auth } } ) => {
 				</Typography>
 				{user._id ? (
 				//Auth Navigation
-					<div><Button><ActiveLink href={`/profile/${user._id}`}>Profile</ActiveLink></Button><Button variant="outlined" onClick={signoutUser}>Sign Out</Button></div>
+					<div><Button><ActiveLink href={`/profile/${user._id}`}>Profile</ActiveLink></Button><Button variant="outlined" style={{ 
+						borderColor:"#ffffff",
+						color:"#ffffff" 
+					}} onClick={signoutUser}>Sign Out</Button></div>
 				):( //Unauthorized Navigation
 					<div><Button><ActiveLink href='/signin'>Sign In</ActiveLink></Button> <Button><ActiveLink href='/signup'>Sign Up</ActiveLink></Button></div>
 				)}
