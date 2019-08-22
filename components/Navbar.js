@@ -5,6 +5,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import ShareOutlined from "@material-ui/icons/ShareOutlined";
+import HomeIcon from "@material-ui/icons/Home";
 import withStyles from "@material-ui/core/styles/withStyles";
 import ActiveLink from "./ActiveLink";
 import { signoutUser } from "../lib/auth";
@@ -14,12 +15,12 @@ const Navbar = ( { classes, router, pageProps: { auth } } ) => {
 		<AppBar className={classes.appBar} position = {router.pathname === "/" ? "fixed": "static"}>
 			<Toolbar>
 				<ActiveLink href='/'>
-					<ShareOutlined className={classes.icon}/>
+					<HomeIcon className={classes.icon}/>
 				</ActiveLink>
 				<Typography variant="h5" component="h1" className={classes.toolbarTitle}>
 
 					<ActiveLink href='/'> 
-						Next Connect
+						NextJS Social
 					</ActiveLink>
 					
 				</Typography>

@@ -52,9 +52,11 @@ const Index = ( { classes,auth } ) =>{
 					</Typography>
 
 					<Typography	 variant="h6" align="center" color="textSecondary" component ="p">
-						Some stuff stuff stuff stuff Some stuff stuff stuff stuff Some stuff stuff stuff stuff
-						Some stuff stuff stuff stuff Some stuff stuff stuff stuff Some stuff stuff stuff stuff
-						Some stuff stuff stuff stuff Some stuff stuff stuff stuff Some stuff stuff stuff stuff
+						
+						This is a web application built by David Hanlon using ReactJS, NextJS, Express, 
+						Mongoose, Material UI, MongoDB, and Axios. This application was built as part of a
+						learning experience to enhance my current Node, React, and NextJS skill-set. Feel free 
+						to sign up and explore the application. Click the link below to get started.
 					</Typography>
 
 					
