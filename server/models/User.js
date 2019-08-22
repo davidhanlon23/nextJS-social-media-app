@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
 			trim: true,
 			unique: true,
 			minlength: 4,
-			maxlength: 10,
+			maxlength: 20,
 			required: "Name is required"
 		},
 		avatar: {
